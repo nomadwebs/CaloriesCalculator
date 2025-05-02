@@ -31,7 +31,7 @@ export default function ActivityList({ activities, dispatch }: ActivityListProps
                 {isEmpty ?
                     <p className="text-center my-5">There are not activities yet</p> :
                     activities.map(activity =>
-                        //Visualización principal de actividad
+
                         <div key={activity.id} className="px-5 py-10 mb-10 shadow rounded-b-md bg-white mt-5 flex justify-between">
                             {/* Columna izquierda */}
                             <div className="space-y-3 relative">

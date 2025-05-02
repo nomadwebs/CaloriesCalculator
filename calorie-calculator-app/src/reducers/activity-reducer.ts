@@ -3,7 +3,8 @@ import { Activity } from "../types";
 export type ActivityActions =
     { type: 'save-activity', payload: { newActivity: Activity } } |
     { type: 'set-activeId', payload: { id: Activity['id'] } } |
-    { type: 'delete-activity', payload: { id: Activity['id'] } }
+    { type: 'delete-activity', payload: { id: Activity['id'] } } |
+    { type: 'restart-app' } //Como solo vamos a limpiar no necesitamos payload
 
 
 
@@ -13,8 +14,13 @@ export type ActivityState = {
 }
 
 
+const localStorageActivities = (): Activity[] => {
+    const activities = localStorage.getItem('activities')
+    return activities ? JSON.parse(activities) : []
+}
+
 export const initialState: ActivityState = {
-    activities: [],
+    activities: localStorageActivities(),
     activeId: ''
 }
 
@@ -32,11 +38,9 @@ export const activityReducer = (
             //Si tenemos algo aquí es que estamos editando
             updatedActivities = state.activities.map(activity => activity.id === state.activeId ? action.payload.newActivity : activity)
 
-
         } else {
             //Y si no tenemos nada añadimos la nueva actividad al state
             updatedActivities = [...state.activities, action.payload.newActivity]
-
         }
 
 
@@ -58,6 +62,13 @@ export const activityReducer = (
         return {
             ...state,
             activities: state.activities.filter(activity => activity.id !== action.payload.id)
+        }
+    }
+
+    if (action.type === 'restart-app') {
+        return {
+            activities: [],
+            activeId: ''
         }
     }
 
